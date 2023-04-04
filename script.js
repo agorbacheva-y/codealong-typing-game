@@ -43,7 +43,7 @@ const words = [
 // 6. Counting down - timer
 // 7. update time
 // 8. gameOver and reload game
-// 9. eventlistener => time += 3;
+// 9. eventlistener => time += 5;
 
 // PART 3
 // 10. settings btn
@@ -60,6 +60,17 @@ let score = 0;
 
 // initializing time
 let time = 10;
+
+// initializing difficulty
+// if nothing is chosen, default to medium
+let difficulty = localStorage.getItem("difficulty") !== null
+? localStorage.getItem("difficulty")
+: "medium";
+
+// set difficulty select value
+difficultySelect.value = localStorage.getItem("difficulty") !== null
+? localStorage.getItem("difficulty")
+: "medium";
 
 // focus text input at start
 text.focus();
@@ -126,6 +137,23 @@ text.addEventListener("input", (event) => {
     event.target.value = "";
 
     // add time if input is correct
-    time += 3;
+    if (difficulty === "hard") {
+      time += 2;
+    } else if (difficulty === "medium") {
+      time += 3;
+    } else {
+      time += 5;
+    }    
   }
 });
+
+// SETTING BTN - SHOW DIFFICULTY WHEN CLICK
+settingsBtn.addEventListener("click", () => settings.classList.toggle("hide"));
+
+// SETTING DIFFICULTY
+settingsForm.addEventListener("change", (event) => {
+  difficulty = event.target.value;
+
+  // store difficulty level in local storage
+  localStorage.setItem("difficulty", difficulty);
+})
