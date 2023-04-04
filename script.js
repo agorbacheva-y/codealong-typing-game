@@ -42,8 +42,8 @@ const words = [
 // 5. get the cursor automatically in input
 // 6. Counting down - timer
 // 7. update time
-// 8. gameOver
-// 9. eventlistener => time += 5;
+// 8. gameOver and reload game
+// 9. eventlistener => time += 3;
 
 // PART 3
 // 10. settings btn
@@ -61,17 +61,48 @@ let score = 0;
 // initializing time
 let time = 10;
 
+// focus text input at start
+text.focus();
+
+// count down
+const timeInterval = setInterval(updateTime, 1000);
+
+
+// GET RANDOM WORD
 function getRandomWord() {
   return words[Math.floor(Math.random() * words.length)];
   // floor will just round down
   // function to get a random word from our words array
 }
 
+// ADD WORD TO DOM
 function addWordToDOM() {
+  // call function getRandomWord and save it in variable randomWord
   randomWord = getRandomWord();
+  // connect to DOM with id
   word.innerHTML = randomWord;
 }
 
+// SET TIMER TO COUNT DOWN INSTEAD OF UP
+function updateTime() {
+  time--;
+  timeEl.innerHTML = time + "s";
+
+  if (time === 0) {
+    clearInterval(timeInterval);
+
+    gameOver();
+  }
+}
+
+// GAME OVER
+function gameOver() {
+  endgameEl.innerHTML = `<h1>Time out!</h1> <p>Your final score is ${score}.</p> <button onClick="location.reload()">Reload</button>`
+
+  endgameEl.style.display = "flex";
+}
+
+// ADD 1 TO SCORE
 function updateScore() {
   score++;
   scoreEl.innerHTML = score;
@@ -79,15 +110,22 @@ function updateScore() {
 
 addWordToDOM();
 
+// RUN GAME
 text.addEventListener("input", (event) => {
+  // event parameter gets value that user typed in input
+  // create variable to save value user typed in input
   const insertedText = event.target.value;
   console.log(insertedText);
 
   if (insertedText === randomWord) {
-    addWordToDOM();
-
     updateScore();
 
+    addWordToDOM();
+
+    // clear input field
     event.target.value = "";
+
+    // add time if input is correct
+    time += 3;
   }
 });
